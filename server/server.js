@@ -12,36 +12,9 @@ const port = process.env.PORT || 3000; //CREAMOS EL PORT QUE NOS DICE SI ESTAMOS
 
 app.use(express.static(publicPath)); //USAMOS EL MIDDLEWARE PARA HABILITAR LA CARPETA PUBLIC Y QUE PUEDAN ACCEDER A ELLA
 
-//IO = Esta es la comunicacion del Backendb - lo que necsitemos hacer haremos referencia a 'io' - (P-Socket.io)
-let io = socketIO(server); //INICIALIZAR EL SOCKET.IO
-
-io.on('connection', (client) => { //NOTIFICA CUANDO UN CLIENTE SE CONECTA AL BACKEND
-    console.log('Usuario conectado');
-
-    client.emit('enviarMensaje', {
-       usuario: 'admin',
-       mensaje: 'bienvenido a esta aplicacion'
-    });
-
-    client.on('disconnect', () => {
-        console.log('Usuario Desconectado'); //CUANDO EL CLIENTE DE DESCONECTA DE LA APLICACION
-    });
-
-    //ESCUCHAR EL CLIENTE
-    client.on('enviarMensaje', (mensaje, callback) => {
-        // console.log(mensaje);
-        if (mensaje.usuario){
-            callback({
-                resp: 'Todo salio bien'
-            })
-        }else {
-            callback({
-                resp: 'TODO SALIO MAL!!!'
-            })
-        }
-    });
-
-});
+//IO = Esta es la comunicacion del Backend - lo que necsitemos hacer haremos referencia a 'io' - (P-Socket.io)
+module.exports.io = socketIO(server); //INICIALIZAR EL SOCKET.IO
+require('./sockets/socket'); //PARA QUE EL SERVER OCUPE EL ARCHIVO
 
 server.listen(port, (err) => { //MONTAMOS NUESTRA APLICACION PARA QUE ESCUCHE EL PUERTO - (P-Socket.io)
 
